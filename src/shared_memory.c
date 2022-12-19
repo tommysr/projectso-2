@@ -17,9 +17,9 @@ int create_shared_memory(key_t key)
   return memory_segment;
 }
 
-void attach_shared_memory(char *address, int segment)
+char *attach_shared_memory(int segment)
 {
-  address = (char *)shmat(segment, 0, 0);
+  char *address = (char *)shmat(segment, 0, 0);
 
   if (*address == -1)
   {
@@ -28,8 +28,10 @@ void attach_shared_memory(char *address, int segment)
   }
   else
   {
-    printf("attached : %s\n", address);
+    printf("attached : %p\n", address);
   }
+
+  return address;
 }
 
 void detach_memory(char *address)

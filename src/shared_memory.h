@@ -11,9 +11,8 @@
 #include <errno.h>
 
 int create_shared_memory(key_t);
-void attach_shared_memory(char *, int);
+char *attach_shared_memory(int segment);
 void mark_remove_memory(int shared_memory_segment);
 void detach_memory(char *address);
-
 
 #endif

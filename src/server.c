@@ -12,7 +12,6 @@
 
 int main()
 {
-  char *shared_memory_address;
   char character;
   FILE *input_file;
 
@@ -21,11 +20,10 @@ int main()
 
   int memory_segment = create_shared_memory(shared_memory_key);
   int semaphore_id = create_semaphore(semaphore_key);
+  char *shared_memory_address = attach_shared_memory(memory_segment);
 
-  attach_shared_memory(shared_memory_address, memory_segment);
-
-  set_semaphore_value(semaphore_id, 0, 1); //server semaphore, allows transmitting data from server
-  set_semaphore_value(semaphore_id, 1, 0); //consumer semaphore, allows reading data by consumer
+  set_semaphore_value(semaphore_id, 0, 1); // server semaphore, allows transmitting data from server
+  set_semaphore_value(semaphore_id, 1, 0); // consumer semaphore, allows reading data by consumer
 
   input_file = fopen("input", "r");
 
@@ -48,7 +46,7 @@ int main()
       release_semaphore(semaphore_id, 0);
 
       *shared_memory_address = character;
-      printf("character = %c, address = %c \n", character, *shared_memory_address);
+      printf("character = %c, address = %s \n", character, shared_memory_address);
 
       lift_semaphore(semaphore_id, 1);
     }
@@ -70,7 +68,7 @@ int main()
     printf("file closed successfully\n");
   }
 
-  detach_memory(shared_memory_address);
+  // detach_memory(shared_memory_address);
 
   exit(EXIT_SUCCESS);
 }

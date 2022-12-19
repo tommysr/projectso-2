@@ -22,10 +22,9 @@ int main()
   int memory_segment = create_shared_memory(shared_memory_key);
   int semaphore_id = create_semaphore(semaphore_key);
 
-  attach_shared_memory(shared_memory_address, memory_segment);
+  shared_memory_address = attach_shared_memory(memory_segment);
 
-  set_semaphore_value(semaphore_id, 0, 1); //server semaphore, allows transmitting data from server
-  set_semaphore_value(semaphore_id, 1, 0); //consumer semaphore, allows reading data by consumer
+  printf("waiting: %p", shared_memory_address);
 
   output_file = fopen("output", "w");
 
@@ -39,7 +38,7 @@ int main()
     printf("successfully opened input file in the read mode");
   }
 
-  while (!feof(output_file))
+  while (character != EOF)
   {
     release_semaphore(semaphore_id, 1);
     character = *shared_memory_address;
@@ -47,7 +46,7 @@ int main()
     if (character != EOF)
     {
       fputc(character, output_file);
-      printf("(c) character = %c, address = %c \n", character, *shared_memory_address);
+      printf("(c) character = %c, address = %s \n", character, shared_memory_address);
 
       lift_semaphore(semaphore_id, 0);
     }
@@ -66,8 +65,9 @@ int main()
   }
 
   delete_semaphore(semaphore_id);
+  mark_remove_memory(memory_segment);
+
   detach_memory(shared_memory_address);
-  mark_remove_memory(shared_memory_key);
 
   exit(EXIT_SUCCESS);
 }
