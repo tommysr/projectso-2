@@ -21,7 +21,7 @@ int main()
 {
   char *shared_memory_address;
   char character;
-  FILE *input_file;
+  FILE *output_file;
 
   key_t shared_memory_key = create_key(2115);
   key_t semaphore_key = create_key(2137);
@@ -34,9 +34,9 @@ int main()
   set_semaphore_value(semaphore_id, 0, 1); //server semaphore, allows transmitting data from server
   set_semaphore_value(semaphore_id, 1, 0); //consumer semaphore, allows reading data by consumer
 
-  input_file = fopen("input", "r");
+  output_file = fopen("output", "w");
 
-  if (input_file == NULL)
+  if (output_file == NULL)
   {
     perror("cant open file in read mode");
     exit(EXIT_FAILURE);
@@ -46,26 +46,21 @@ int main()
     printf("successfully opened input file in the read mode");
   }
 
-  while (!feof(input_file))
+  while (!feof(output_file))
   {
-    character = fgetc(input_file);
+    release_semaphore(semaphore_id, 1);
+    character = *shared_memory_address;
 
     if (character != EOF)
     {
-      release_semaphore(semaphore_id, 0);
+      fputc(character, output_file);
+      printf("(c) character = %c, address = %c \n", character, *shared_memory_address);
 
-      *shared_memory_address = character;
-      printf("character = %c, address = %c \n", character, *shared_memory_address);
-
-      lift_semaphore(semaphore_id, 1);
+      lift_semaphore(semaphore_id, 0);
     }
   }
 
-  release_semaphore(semaphore_id, 0);
-  *shared_memory_address = EOF;
-  lift_semaphore(semaphore_id, 1);
-
-  int file_close_status = fclose(input_file);
+  int file_close_status = fclose(output_file);
 
   if (file_close_status == -1)
   {
@@ -225,7 +220,6 @@ void detach_memory(int shared_memory_segment, char *address)
 {
   int detach_memory_status = shmdt(address);
   int mark_memory_status = shmctl(shared_memory_segment, IPC_RMID, 0);
-
   sleep(5);
 
   if (mark_memory_status == -1 || detach_memory_status == -1)
