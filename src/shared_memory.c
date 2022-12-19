@@ -28,7 +28,7 @@ void attach_shared_memory(char *address, int segment)
   }
   else
   {
-    printf("attached : %s\n", *address);
+    printf("attached : %s\n", address);
   }
 }
 
