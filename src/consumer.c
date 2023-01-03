@@ -14,7 +14,7 @@
 int main()
 {
   char *shared_memory_address;
-  char character = "";
+  char character;
   FILE *output_file;
   int memory_segment;
   int semaphore_id;
@@ -41,14 +41,15 @@ int main()
   {
     semaphore_p(semaphore_id, CONSUMER_SEMAPHORE);
     character = *shared_memory_address;
+    sleep(1);
 
     if (character != EOF)
     {
       fputc(character, output_file);
       printf("(c) char = %c\n", character);
-
-      semaphore_v(semaphore_id, SERVER_SEMAPHORE);
     }
+
+    semaphore_v(semaphore_id, SERVER_SEMAPHORE);
   }
 
   int file_close_status = fclose(output_file);
