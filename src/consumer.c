@@ -14,7 +14,7 @@
 int main()
 {
   char *shared_memory_address;
-  char character;
+  char character = "";
   FILE *output_file;
   int memory_segment;
   int semaphore_id;
