@@ -1,6 +1,6 @@
 default: all
 
-all: sm sp utils consumer server
+all: sm sp utils consumer producer
 
 sm: ./src/shared_memory.c
 	gcc -c ./src/shared_memory.c -o sm
