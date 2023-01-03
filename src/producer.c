@@ -39,19 +39,14 @@ int main()
     printf("successfully opened input file in the read mode\n");
   }
 
-  while (!feof(input_file))
+  while ((character = fgetc(input_file)) != EOF)
   {
-    character = fgetc(input_file);
+    semaphore_p(semaphore_id, SERVER_SEMAPHORE);
 
-    if (character != EOF)
-    {
-      semaphore_p(semaphore_id, SERVER_SEMAPHORE);
+    *shared_memory_address = character;
+    printf("char in shm: %s \n", shared_memory_address);
 
-      *shared_memory_address = character;
-      printf("char in shm: %s \n", shared_memory_address);
-
-      semaphore_v(semaphore_id, CONSUMER_SEMAPHORE);
-    }
+    semaphore_v(semaphore_id, CONSUMER_SEMAPHORE);
   }
 
   // Send EOF as end marker
