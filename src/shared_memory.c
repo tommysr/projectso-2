@@ -6,7 +6,7 @@ int create_shared_memory(key_t key)
 
   if (memory_segment == -1)
   {
-    perror("can't create shared memory.\n");
+    perror("can't create shared memory segment\n");
     exit(EXIT_FAILURE);
   }
   else
@@ -40,26 +40,26 @@ void detach_memory(char *address)
 
   if (detach_memory_status == -1)
   {
-    perror("cant detach shared memory");
+    perror("can't detach shared memory");
     exit(EXIT_FAILURE);
   }
   else
   {
-    printf("Shared memory was successfully detached.\n");
+    printf("shared memory was successfully detached.\n");
   }
 }
 
-void mark_remove_memory(int shared_memory_segment)
+void remove_memory(int shared_memory_segment)
 {
-  int mark_memory_status = shmctl(shared_memory_segment, IPC_RMID, 0);
+  int remove_memory_status = shmctl(shared_memory_segment, IPC_RMID, 0);
 
-  if (mark_memory_status == -1)
+  if (remove_memory_status == -1)
   {
-    perror("memory not marked for deletion");
+    perror("can't remove memory");
     exit(EXIT_FAILURE);
   }
   else
   {
-    printf("memory marked for deletion\n");
+    printf("memory was successfully deleted\n");
   }
 }

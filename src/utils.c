@@ -6,7 +6,7 @@ key_t create_key(int id)
 
   if (key == -1)
   {
-    printf("key creation failed\n");
+    perror("key creation failed\n");
     exit(EXIT_FAILURE);
   }
 

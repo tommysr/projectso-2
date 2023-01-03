@@ -1,10 +1,13 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <sys/ipc.h>
-#include <stdlib.h>
-#include <stdio.h>
+#define SERVER_SEMAPHORE 0
+#define CONSUMER_SEMAPHORE 1
 
-key_t create_key(int);
+#include <sys/ipc.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+key_t create_key(int id);
 
 #endif

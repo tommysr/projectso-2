@@ -14,18 +14,20 @@ int main()
 {
   char character;
   FILE *input_file;
+  int memory_segment;
+  int semaphore_id;
+  char *shared_memory_address;
 
   key_t shared_memory_key = create_key(2115);
   key_t semaphore_key = create_key(2137);
 
-  int memory_segment = create_shared_memory(shared_memory_key);
-  int semaphore_id = create_semaphore(semaphore_key);
-  char *shared_memory_address = attach_shared_memory(memory_segment);
-
-  set_semaphore_value(semaphore_id, 0, 1); // server semaphore, allows transmitting data from server
-  set_semaphore_value(semaphore_id, 1, 0); // consumer semaphore, allows reading data by consumer
-
+  memory_segment = create_shared_memory(shared_memory_key);
+  semaphore_id = create_semaphore(semaphore_key);
+  shared_memory_address = attach_shared_memory(memory_segment);
   input_file = fopen("input", "r");
+
+  set_semaphore_value(semaphore_id, SERVER_SEMAPHORE, 1);
+  set_semaphore_value(semaphore_id, CONSUMER_SEMAPHORE, 0);
 
   if (input_file == NULL)
   {
@@ -43,18 +45,18 @@ int main()
 
     if (character != EOF)
     {
-      release_semaphore(semaphore_id, 0);
+      semaphore_p(semaphore_id, SERVER_SEMAPHORE);
 
       *shared_memory_address = character;
       printf("character = %c, address = %s \n", character, shared_memory_address);
 
-      lift_semaphore(semaphore_id, 1);
+      semaphore_v(semaphore_id, CONSUMER_SEMAPHORE);
     }
   }
 
-  release_semaphore(semaphore_id, 0);
+  semaphore_p(semaphore_id, SERVER_SEMAPHORE);
   *shared_memory_address = EOF;
-  lift_semaphore(semaphore_id, 1);
+  semaphore_v(semaphore_id, CONSUMER_SEMAPHORE);
 
   int file_close_status = fclose(input_file);
 
@@ -68,7 +70,7 @@ int main()
     printf("file closed successfully\n");
   }
 
-  // detach_memory(shared_memory_address);
+  detach_memory(shared_memory_address);
 
   exit(EXIT_SUCCESS);
 }

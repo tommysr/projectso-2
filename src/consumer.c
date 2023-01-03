@@ -6,6 +6,7 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <errno.h>
+
 #include "semaphores.h"
 #include "shared_memory.h"
 #include "utils.h"
@@ -15,32 +16,30 @@ int main()
   char *shared_memory_address;
   char character;
   FILE *output_file;
+  int memory_segment;
+  int semaphore_id;
 
   key_t shared_memory_key = create_key(2115);
-  key_t semaphore_key = create_key(2137);
+  key_t semaphore_key = create_key(2116);
 
-  int memory_segment = create_shared_memory(shared_memory_key);
-  int semaphore_id = create_semaphore(semaphore_key);
-
+  memory_segment = create_shared_memory(shared_memory_key);
+  semaphore_id = create_semaphore(semaphore_key);
   shared_memory_address = attach_shared_memory(memory_segment);
-
-  printf("waiting: %p", shared_memory_address);
-
   output_file = fopen("output", "w");
 
   if (output_file == NULL)
   {
-    perror("cant open file in read mode");
+    perror("can't open file in write mode");
     exit(EXIT_FAILURE);
   }
   else
   {
-    printf("successfully opened input file in the read mode");
+    printf("successfully opened input file in the write mode\n");
   }
 
   while (character != EOF)
   {
-    release_semaphore(semaphore_id, 1);
+    semaphore_p(semaphore_id, CONSUMER_SEMAPHORE);
     character = *shared_memory_address;
 
     if (character != EOF)
@@ -48,7 +47,7 @@ int main()
       fputc(character, output_file);
       printf("(c) character = %c, address = %s \n", character, shared_memory_address);
 
-      lift_semaphore(semaphore_id, 0);
+      semaphore_v(semaphore_id, SERVER_SEMAPHORE);
     }
   }
 
@@ -65,9 +64,8 @@ int main()
   }
 
   delete_semaphore(semaphore_id);
-  mark_remove_memory(memory_segment);
-
   detach_memory(shared_memory_address);
+  remove_memory(memory_segment);
 
   exit(EXIT_SUCCESS);
 }

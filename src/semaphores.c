@@ -11,7 +11,7 @@ int create_semaphore(key_t key)
   }
   else
   {
-    printf("semaphore was created: %d\n", semaphore);
+    printf("semaphore was created, id: %d\n", semaphore);
   }
 
   return semaphore;
@@ -20,14 +20,15 @@ int create_semaphore(key_t key)
 void set_semaphore_value(int sem_id, int sem_num, int value)
 {
   int set_sem_res = semctl(sem_id, sem_num, SETVAL, value);
+
   if (set_sem_res == -1)
   {
-    perror("cant set semaphore");
+    perror("can't set semaphore value");
     exit(EXIT_FAILURE);
   }
   else
   {
-    printf("semaphore was set\n");
+    printf("semaphore value was set\n");
   }
 }
 
@@ -42,11 +43,11 @@ void delete_semaphore(int semaphore_id)
   }
   else
   {
-    printf("semaphore was deleted: %d\n", sem_delete);
+    printf("semaphore was deleted, id: %d\n", sem_delete);
   }
 }
 
-void lift_semaphore(int semaphore_id, int sem_num)
+void semaphore_v(int semaphore_id, int sem_num)
 {
   struct sembuf sem_buffer;
   sem_buffer.sem_num = sem_num;
@@ -57,16 +58,16 @@ void lift_semaphore(int semaphore_id, int sem_num)
 
   if (sem_change == -1)
   {
-    perror("Cannot lift semaphore\n");
+    perror("cannot increment semaphore\n");
     exit(EXIT_FAILURE);
   }
   else
   {
-    printf("Semaphore was lifted");
+    printf("semaphore was incremented \n");
   }
 }
 
-void release_semaphore(int semaphore_id, int sem_num)
+void semaphore_p(int semaphore_id, int sem_num)
 {
   struct sembuf sem_buffer;
   sem_buffer.sem_num = sem_num;
@@ -79,16 +80,16 @@ void release_semaphore(int semaphore_id, int sem_num)
   {
     if (errno == EINTR)
     {
-      release_semaphore(semaphore_id, sem_num);
+      semaphore_p(semaphore_id, sem_num);
     }
     else
     {
-      perror("Cannot release semaphore\n");
+      perror("cannot decrement semaphore\n");
       exit(EXIT_FAILURE);
     }
   }
   else
   {
-    printf("Semaphore was released\n");
+    printf("semaphore was decremented\n");
   }
 }
