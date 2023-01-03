@@ -14,8 +14,8 @@ utils: ./src/utils.c
 consumer: ./src/consumer.c
 	gcc ./src/consumer.c sm sp utils -o consumer
 
-server: ./src/server.c
-	gcc ./src/server.c sm sp utils -o server
+producer: ./src/producer.c
+	gcc ./src/producer.c sm sp utils -o server
 
 clean:
-	rm -f server consumer utils sm sp
+	rm -f producer consumer utils sm sp
