@@ -19,7 +19,7 @@ int main()
   char *shared_memory_address;
 
   key_t shared_memory_key = create_key(2115);
-  key_t semaphore_key = create_key(2137);
+  key_t semaphore_key = create_key(2116);
 
   memory_segment = create_shared_memory(shared_memory_key);
   semaphore_id = create_semaphore(semaphore_key);
@@ -36,7 +36,7 @@ int main()
   }
   else
   {
-    printf("successfully opened input file in the read mode");
+    printf("successfully opened input file in the read mode\n");
   }
 
   while (!feof(input_file))
@@ -48,12 +48,13 @@ int main()
       semaphore_p(semaphore_id, SERVER_SEMAPHORE);
 
       *shared_memory_address = character;
-      printf("character = %c, address = %s \n", character, shared_memory_address);
+      printf("char in shm: %s \n", shared_memory_address);
 
       semaphore_v(semaphore_id, CONSUMER_SEMAPHORE);
     }
   }
 
+  // Send EOF as end marker
   semaphore_p(semaphore_id, SERVER_SEMAPHORE);
   *shared_memory_address = EOF;
   semaphore_v(semaphore_id, CONSUMER_SEMAPHORE);

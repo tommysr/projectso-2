@@ -45,7 +45,7 @@ int main()
     if (character != EOF)
     {
       fputc(character, output_file);
-      printf("(c) character = %c, address = %s \n", character, shared_memory_address);
+      printf("(c) char = %c\n", character);
 
       semaphore_v(semaphore_id, SERVER_SEMAPHORE);
     }
@@ -64,8 +64,8 @@ int main()
   }
 
   delete_semaphore(semaphore_id);
-  detach_memory(shared_memory_address);
   remove_memory(memory_segment);
+  detach_memory(shared_memory_address);
 
   exit(EXIT_SUCCESS);
 }
