@@ -63,7 +63,9 @@ void semaphore_v(int semaphore_id, int sem_num)
   }
   else
   {
-    printf("semaphore was incremented \n");
+#ifdef DEBUG
+    printf("semaphore %d was incremented \n", sem_num);
+#endif
   }
 }
 
@@ -90,6 +92,8 @@ void semaphore_p(int semaphore_id, int sem_num)
   }
   else
   {
-    printf("semaphore was decremented\n");
+#ifdef DEBUG
+    printf("semaphore %d was decremented \n", sem_num);
+#endif
   }
 }

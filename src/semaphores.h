@@ -9,6 +9,8 @@
 #include <sys/sem.h>
 #include <errno.h>
 
+// #define DEBUG
+
 int create_semaphore(key_t key);
 void set_semaphore_value(int sem_id, int sem_num, int value);
 void semaphore_v(int semaphore_id, int sem_num);
