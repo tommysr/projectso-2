@@ -52,12 +52,13 @@ void semaphore_v(int semaphore_id, int sem_num)
   struct sembuf sem_buffer;
   sem_buffer.sem_num = sem_num;
   sem_buffer.sem_op = 1;
-  sem_buffer.sem_flg = SEM_UNDO;
+  sem_buffer.sem_flg = 0; // SEM_UNDO;
 
   int sem_change = semop(semaphore_id, &sem_buffer, 1);
 
   if (sem_change == -1)
   {
+
     perror("cannot increment semaphore\n");
     exit(EXIT_FAILURE);
   }
@@ -65,8 +66,8 @@ void semaphore_v(int semaphore_id, int sem_num)
   {
 #ifdef DEBUG
     printf("semaphore %d was incremented \n", sem_num);
-    int sem_value = semctl(semaphore_id, sem_num, GETVAL);
-    printf("val: %d\n", sem_value);
+    // int sem_value = semctl(semaphore_id, sem_num, GETVAL);
+    // printf("val: %d\n", sem_value);
 #endif
   }
 }
@@ -96,8 +97,8 @@ void semaphore_p(int semaphore_id, int sem_num)
   {
 #ifdef DEBUG
     printf("semaphore %d was decremented \n", sem_num);
-    int sem_value = semctl(semaphore_id, sem_num, GETVAL);
-    printf("val: %d\n", sem_value);
+    // int sem_value = semctl(semaphore_id, sem_num, GETVAL);
+    // printf("val: %d\n", sem_value);
 #endif
   }
 }
