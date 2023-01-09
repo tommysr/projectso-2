@@ -19,11 +19,13 @@ int create_shared_memory(key_t key)
 
 char *attach_shared_memory(int segment)
 {
-  char *address = (char *)shmat(segment, 0, 0);
+  char *address;
+  address = (char *)shmat(segment, 0, 0);
 
-  if (*address == -1)
+  if (address == (char *)-1)
   {
-    perror("can't attach memory\n");
+    perror("cannot attach memory\n");
+    printf("Error %d, attach res %p", errno, address);
     exit(EXIT_FAILURE);
   }
   else

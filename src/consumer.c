@@ -48,6 +48,10 @@ int main()
       fputc(character, output_file);
       printf("(c) char = %c\n", character);
     }
+    else
+    {
+      printf("character is eof");
+    }
 
     semaphore_v(semaphore_id, SERVER_SEMAPHORE);
   }
@@ -64,8 +68,6 @@ int main()
     printf("file closed successfully\n");
   }
 
-  delete_semaphore(semaphore_id);
-  remove_memory(memory_segment);
   detach_memory(shared_memory_address);
 
   exit(EXIT_SUCCESS);
