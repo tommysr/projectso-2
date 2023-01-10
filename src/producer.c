@@ -52,7 +52,7 @@ int main()
 
   // Send EOF as end marker
   semaphore_p(semaphore_id, SERVER_SEMAPHORE);
-  printf("Sending END OF STREAM marker\n");
+  printf("Sending end of stream marker\n");
   *shared_memory_address = EOF;
   semaphore_v(semaphore_id, CONSUMER_SEMAPHORE);
 
@@ -71,8 +71,6 @@ int main()
   {
     printf("file closed successfully\n");
   }
-
-  sleep(10);
 
   detach_memory(shared_memory_address);
 

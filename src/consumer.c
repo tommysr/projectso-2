@@ -46,11 +46,11 @@ int main()
     if (character != EOF)
     {
       fputc(character, output_file);
-      printf("(c) char = %c\n", character);
+      printf("(c) read char: %c\n", character);
     }
     else
     {
-      printf("character is eof");
+      printf("(c) end of stream marker read");
     }
 
     semaphore_v(semaphore_id, SERVER_SEMAPHORE);
