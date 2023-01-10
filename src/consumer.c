@@ -50,11 +50,13 @@ int main()
     }
     else
     {
-      printf("(c) end of stream marker read");
+      printf("(c) end of stream marker read\n");
     }
 
     semaphore_v(semaphore_id, SERVER_SEMAPHORE);
   }
+
+  detach_memory(shared_memory_address);
 
   int file_close_status = fclose(output_file);
 
@@ -67,8 +69,6 @@ int main()
   {
     printf("file closed successfully\n");
   }
-
-  detach_memory(shared_memory_address);
 
   exit(EXIT_SUCCESS);
 }
