@@ -21,10 +21,6 @@ int main()
 
   key_t shared_memory_key = create_key(2115);
   key_t semaphore_key = create_key(2116);
-
-  memory_segment = create_shared_memory(shared_memory_key);
-  semaphore_id = create_semaphore(semaphore_key);
-  shared_memory_address = attach_shared_memory(memory_segment);
   output_file = fopen("output", "w");
 
   if (output_file == NULL)
@@ -36,6 +32,10 @@ int main()
   {
     printf("successfully opened input file in the write mode\n");
   }
+
+  memory_segment = create_shared_memory(shared_memory_key);
+  semaphore_id = create_semaphore(semaphore_key);
+  shared_memory_address = attach_shared_memory(memory_segment);
 
   while (character != EOF)
   {

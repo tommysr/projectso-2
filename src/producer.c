@@ -20,14 +20,7 @@ int main()
 
   key_t shared_memory_key = create_key(2115);
   key_t semaphore_key = create_key(2116);
-
-  memory_segment = create_shared_memory(shared_memory_key);
-  semaphore_id = create_semaphore(semaphore_key);
-  shared_memory_address = attach_shared_memory(memory_segment);
   input_file = fopen("input", "r");
-
-  set_semaphore_value(semaphore_id, SERVER_SEMAPHORE, 1);
-  set_semaphore_value(semaphore_id, CONSUMER_SEMAPHORE, 0);
 
   if (input_file == NULL)
   {
@@ -38,6 +31,13 @@ int main()
   {
     printf("successfully opened input file in the read mode\n");
   }
+
+  memory_segment = create_shared_memory(shared_memory_key);
+  semaphore_id = create_semaphore(semaphore_key);
+  shared_memory_address = attach_shared_memory(memory_segment);
+
+  set_semaphore_value(semaphore_id, SERVER_SEMAPHORE, 1);
+  set_semaphore_value(semaphore_id, CONSUMER_SEMAPHORE, 0);
 
   while ((character = fgetc(input_file)) != EOF)
   {
@@ -57,7 +57,9 @@ int main()
   semaphore_v(semaphore_id, CONSUMER_SEMAPHORE);
 
   semaphore_p(semaphore_id, SERVER_SEMAPHORE);
+
   delete_semaphore(semaphore_id);
+  detach_memory(shared_memory_address);
   remove_memory(memory_segment);
 
   int file_close_status = fclose(input_file);
@@ -71,8 +73,6 @@ int main()
   {
     printf("file closed successfully\n");
   }
-
-  detach_memory(shared_memory_address);
 
   exit(EXIT_SUCCESS);
 }
