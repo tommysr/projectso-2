@@ -43,7 +43,7 @@ int main()
   {
     semaphore_p(semaphore_id, SERVER_SEMAPHORE);
 
-    // sleep(1);
+    sleep(1);
     *shared_memory_address = character;
     printf("char in shm: %s \n", shared_memory_address);
 

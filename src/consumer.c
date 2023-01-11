@@ -41,7 +41,7 @@ int main()
   {
     semaphore_p(semaphore_id, CONSUMER_SEMAPHORE);
     character = *shared_memory_address;
-    // sleep(1);
+    sleep(1);
 
     if (character != EOF)
     {
